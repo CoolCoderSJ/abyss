@@ -1,0 +1,20 @@
+body {
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+.hero {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+}
+
+.hero h1 {
+    margin-top: 4rem;
+}
+
+.primary { 
+    color: "#007bff" !important;
+}
