@@ -1,10 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap');
+
+p, h1, h2, h3, h4, h5, h6, li, a {
+    font-family: 'Merriweather', serif;
+    margin-top: 2px;
+    margin-bottom: 6px;
+}
+
+* {
+    transition: 250ms;
+}
+
+button:hover, a:hover {
+    transition: 250ms;
+}
+
 body {
     padding-left: 50px;
     padding-right: 50px;
 }
 
 .hero {
-    min-height: 80vh;
+    min-height: 90vh;
     display: flex;
     align-items: center;
     text-align: center;
@@ -12,9 +28,85 @@ body {
 }
 
 .hero h1 {
-    margin-top: 4rem;
+    margin-top: 6rem;
 }
 
 .primary { 
-    color: "#007bff" !important;
+    color: turquoise;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+}
+
+nav a {
+    text-decoration: none;
+    color: black;
+}
+
+nav a:hover {
+    color: gray;
+}
+
+.flex {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    align-content: center;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+button a {
+    color: white !important;
+}
+
+button.secondary a {
+    color: black !important;
+}
+
+button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: black;
+    color: white;
+    cursor: pointer;
+    border: 3px solid black;
+}
+
+button.secondary {
+    color: black;
+    background-color: white;
+}
+
+button:hover {
+    background-color: white;
+    color: black;
+}
+
+button.secondary:hover {
+    background-color: black;
+    color: white;
+}
+
+button a:hover {
+    color: black !important;
+}
+
+button.secondary a:hover {
+    color: white !important;
+}
+
+section {
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    min-height: 40vh;
 }

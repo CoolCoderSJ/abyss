@@ -3,27 +3,61 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="color-scheme" content="light dark" />
-    <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
-    />
     <link rel="stylesheet" href="/static/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.3.0/animate.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
     <title>abyss</title>
   </head>
   <body>
+    <script>
+      new WOW().init();
+    </script>
+
     <nav>
-        <ul>
-          <li><strong>abyss.</strong></li>
-        </ul>
-        <ul>
-          <li><a href="/login" class="contrast">Get Started</a></li>
-        </ul>
+        <div>
+          <h2><strong>abyss<span class="primary">.</span></strong></h2>
+        </div>
+        <div>
+          <a href="/login">Login</a>
+        </div>
       </nav>
 
     <main class="hero">
-      <h1>abyss<span class="primary">.</span></h1>
-      <h6><i>Let your thoughts fly away...</i></h6>
+      <h1 class="animate">abyss<span class="primary">.</span></h1>
+      <h3 class="animate"><i>Let your thoughts fly away...</i></h3>
+      <br>
+
+      <div class="flex animate__animated animate__fadeIn animate__delay-5s animate__slower">
+        <button class="secondary"><a href="#more">Learn More</a></button>
+        <button><a href="/login">Get Started</a></button>
+      </div>
     </main>
+
+    <section class="wow fadeIn">
+      <div>
+        <h1>Let your thoughts <span class="primary">disappear</span></h1>
+        <p>Once your thoughts are off, abyss won't show them to you again.</p>
+      </div>
+    </section>
+
+
+    <script>
+      let elements = document.getElementsByClassName("animate")
+      for (let i = 0; i<elements.length; i++) {
+        let element = elements[i]
+
+      element.innerHTML = element.textContent.replace(/\S/g, "<span class='letter'>$&</span>");
+
+      anime.timeline({loop: false})
+        .add({
+          targets: '.animate .letter',
+          opacity: [0,1],
+          easing: "easeInOutQuad",
+          duration: 2250,
+          delay: (el, i) => 150 * (i+1)
+        })
+      }
+   </script>
   </body>
 </html>
