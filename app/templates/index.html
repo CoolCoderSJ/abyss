@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/static/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.3.0/animate.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
+    <title>abyss</title>
+  </head>
+  <body>
+    <script>
+      new WOW().init();
+    </script>
+
+    <nav>
+        <div>
+          <h2><strong>abyss<span class="primary">.</span></strong></h2>
+        </div>
+        <div>
+          <a href="/settings">Settings</a>
+        </div>
+      </nav>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <main class="hero">
+      <h1>What's on your mind today?</h1>
+
+        <form class="nostyles" method="post" action="/">
+            <div class="editor">
+                <textarea name="thought" id="post" placeholder="Write your thoughts here..." style="width: 500px; height: 200px; resize: none"></textarea>
+                <div class="action-bar">
+                    <div class="section">
+                        <button type="button" class="secondary" onclick="document.querySelector('#post').value += '**bolded text here**'; document.querySelector('#post').focus()"><b>B</b></button>
+                        <button type="button" class="secondary" onclick="document.querySelector('#post').value += '*italicized text here*'; document.querySelector('#post').focus()"><i>I</i></button>
+                        <button type="button" class="secondary" onclick="document.querySelector('#post').value += '<u>underlined text here</u>'; document.querySelector('#post').focus()" style="text-decoration: underline;">U</button>
+                        <button type="button" class="secondary" onclick="document.querySelector('#post').value += '~~striked text here~~'; document.querySelector('#post').focus()" style="text-decoration: line-through;">S</button>
+                    </div>
+
+                    <div class="section">
+                        <button type="button" class="secondary" onclick="if (confirm('Are you sure? This will clear the editor and is not reversible.') == true) document.querySelector('#post').value = ''; document.querySelector('#post').focus()">Clear</button>
+                        <button type="submit">Done</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </main>
+  </body>
+</html>

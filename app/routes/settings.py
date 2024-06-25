@@ -9,8 +9,11 @@ def settings():
     if 'user' not in session:
         return redirect('/login')
     
-    settings = db.get_document("data", 'settings', session['user'])
-    
+    try:
+        settings = db.get_document("data", 'settings', session['user'])
+    except:
+        settings = {}
+        
     return render_template("settings.html", kwargs=settings)
 
 @app.route("/settings/changePassword", methods=['POST'])

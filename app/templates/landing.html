@@ -8,6 +8,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
     <title>abyss</title>
+    <script>
+      setTimeout(() => {
+        document.querySelector("#hero-btns").classList.add("opac1")
+      }, 5000)
+    </script>
   </head>
   <body>
     <script>
@@ -28,19 +33,30 @@
       <h3 class="animate"><i>Let your thoughts fly away...</i></h3>
       <br>
 
-      <div class="flex animate__animated animate__fadeIn animate__delay-5s animate__slower">
+      <div id="hero-btns" class="flex opac0">
         <button class="secondary"><a href="#more">Learn More</a></button>
         <button><a href="/login">Get Started</a></button>
       </div>
     </main>
 
-    <section class="wow fadeIn">
+    <section class="wow fadeIn" id="more">
       <div>
         <h1>Let your thoughts <span class="primary">disappear</span></h1>
-        <p>Once your thoughts are off, abyss won't show them to you again.</p>
+        <p>Once your thoughts are off into the abyss, you won't see them again <i>(unless you choose to, of course)</i>.</p>
       </div>
     </section>
 
+    <section class="wow fadeIn reverse">
+      <div>
+        <h1>Share your thoughts, <span class="primary">privately</span></h1>
+        <p>Don't want everyone inside your mind? You can choose to add a password to your thoughts page, or disable it entirely.</p>
+      </div>
+    </section>
+
+    <div style="min-height: 30vh; display: flex; align-items: center; gap: 8px; flex-direction: column;" class="wow fadeIn">
+      <h1>What are you waiting for?</h1>
+      <button><a href="/login">Get Started</a></button>
+    </div>
 
     <script>
       let elements = document.getElementsByClassName("animate")

@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/static/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.3.0/animate.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
+    <title>Settings | abyss</title>
+  </head>
+  <body>
+    <script>
+      new WOW().init();
+    </script>
+
+    <nav>
+        <div>
+          <h2><strong>abyss<span class="primary">.</span></strong></h2>
+        </div>
+        <div>
+          <a href="/settings">Settings</a>
+        </div>
+      </nav>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <main class="hero">
+      <h1>Settings</h1>
+      <br>
+
+
+    </main>
+  </body>
+</html>

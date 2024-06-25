@@ -15,8 +15,8 @@ def login_post():
     if 'user' in session:
         return redirect('/')
     
-    if not request.form or not 'username' in request.form or not 'password' in request.form:
-        flash("Please enter your username and password.")
+    if not request.form or not 'email' in request.form or not 'password' in request.form:
+        flash("Please enter your email and password.")
         return render_template("login.html")
     
     email = request.form['email']
