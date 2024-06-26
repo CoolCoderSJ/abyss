@@ -4,7 +4,7 @@ html {
     scroll-behavior: smooth;
 }
 
-p, h1, h2, h3, h4, h5, h6, li, a, label, button, input, textarea {
+p, h1, h2, h3, h4, h5, h6, li, a, label, button, input, textarea, small {
     font-family: 'Merriweather', serif;
     margin-top: 2px;
     margin-bottom: 6px;
@@ -119,10 +119,6 @@ section {
     flex-direction: row-reverse;
 }
 
-.hidden {
-    display: none;
-}
-
 .opac0 {
     opacity: 0;
     transition: 2s
@@ -157,7 +153,16 @@ form button {
 .field {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
+}
+
+.selection_field {
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 2px;
+    align-items: center;
+    justify-content: flex-end;
+
 }
 
 input[type="text"], input[type="email"], input[type="password"] {
@@ -170,6 +175,24 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
     outline: none;
     border: 1px solid turquoise;
     transition: 250ms;
+}
+
+input[type="checkbox"], input[type="radio"] {
+    margin-right: 8px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 2px solid black;
+    border-radius: 4px;
+    outline: none;
+    cursor: pointer;
+    transition: 250ms;
+}
+
+input[type="checkbox"]:checked, input[type="radio"]:checked {
+    background-color: black;
 }
 
 .alert {
@@ -209,4 +232,13 @@ textarea {
 
 .action-bar button {
     padding: 4px 8px;
+}
+
+.danger {
+    background-color: darkred;
+    border: 3px solid darkred;
+}
+
+.hidden {
+    display: none;
 }

@@ -24,7 +24,7 @@ def login_post():
 
     allusers = users.list(queries=[Query.equal('name', email)])['users']
     if len(allusers) == 0:
-        sessid = users.create('unique()', name=email, password=password)['$id']
+        sessid = users.create_argon2_user('unique()', email=email, name=email.split("@")[0], password=password)['$id']
         session['user'] = sessid
         return redirect("/")
     

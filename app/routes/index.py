@@ -1,6 +1,7 @@
 from flask import render_template, session, abort, redirect, request, flash
-from app import app, db, get_all_docs
+from app import app, db, get_all_docs, users
 from datetime import datetime
+from cryptography.fernet import Fernet
 
 @app.route("/")
 def index():
@@ -17,8 +18,11 @@ def post_thought():
     if not request.form or not 'thought' in request.form:
         flash("Please enter a thought.")
         return redirect('/')
-    
-    db.create_document("data", "posts", {"thought": request.form['thought'], "uid": session['user'], "postedAt": datetime.now().isoformat()})
+
+    user = users.get(session['user'])
+    f = Fernet(user['password'])
+
+    db.create_document("data", "posts", {"thought": f.encrypt(request.form['thought'].encode("utf-8")).decode("utf-8"), "uid": session['user'], "postedAt": datetime.now().isoformat()})
     
     flash("Find peace knowing your thought is drifting away...")
     return redirect('/')

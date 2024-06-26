@@ -13,6 +13,11 @@
     <script>
       new WOW().init();
     </script>
+    <style>
+      form {
+        width: 35%
+      }
+    </style>
 
     <nav>
         <div>
@@ -37,6 +42,83 @@
       <h1>Settings</h1>
       <br>
 
+      <form action="/settings/updateDetails" method="post">
+        <div class="field">
+          <label for="name">Name</label>
+          <input type="text" name="name" id="name" value="{{ user['name'] }}" placeholder="Your name" required>
+        </div>
+        <br>
+
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" name="email" id="email" value="{{ user['email'] }}" placeholder="Your email" required>
+        </div>
+        <br>
+
+        <button type="submit">Save</button>
+      </form>
+
+      <br><br>
+
+      <form action="/settings/changePassword" method="post">
+        <h3 style="text-align: center;">Account Settings</h3><br>
+        <div class="field">
+          <label for="name">Old Password</label>
+          <input type="password" name="old" placeholder="Enter your old password" required>
+        </div>
+        <br>
+
+        <div class="field">
+          <label for="name">Password</label>
+          <input type="password" name="password" placeholder="Enter a new password" required>
+        </div>
+        <br>
+
+        <div class="field">
+          <label for="email">Confirm Password</label>
+          <input type="password" name="confirm" placeholder="Confirm your new password" required>
+        </div>
+        <br>
+
+        <button type="submit">Update</button>
+      </form>
+
+      <br><br>
+
+      <form action="/settings/change" method="post">
+        <div class="selection_field">
+          <label>Password Protect View Page</label>
+          <input type="checkbox" name="usepassw" value="on" {% if settings['passwordHash'] %}checked{% endif %} onchange="let elem = document.querySelector('#pwi'); document.querySelector('#passwordHash').classList.toggle('hidden'); !elem.getAttribute('required') ? elem.setAttribute('required', 'required') : elem.removeAttribute('required')">
+        </div>
+
+        <div id="passwordHash" class="field {% if not settings['passwordHash'] %}hidden{% endif %}">
+          <input id="pwi" type="password" name="passwordHash" placeholder="Enter the password you'd like to use">
+        </div>
+
+        <br>
+
+        <div class="selection_field">
+          <label>"Disappear mode" on by default</label>
+          <input type="checkbox" name="disappearByDefault" value="on" {% if settings['disappearByDefault'] %}checked{% endif %}>
+        </div>
+        <br>
+
+        <div class="selection_field">
+          <label>Disable view page</label>
+          <input type="checkbox" name="disablePage" value="on" {% if settings['disablePage'] %}checked{% endif %}>
+        </div>
+        <br>
+
+        <button type="submit">Update</button>
+      </form>
+
+      <br><br>
+
+      <form action="/settings/deleteAccount" class="nostyles" method="post" style="width: 35%">
+        <button type="submit" class="danger">Delete Account</button>
+      </form>
+
+      <br><br>
 
     </main>
   </body>
