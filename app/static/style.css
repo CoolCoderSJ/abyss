@@ -55,11 +55,20 @@ nav a:hover {
     color: gray;
 }
 
+nav div {
+    display: flex;
+    gap: 24px;
+}
+
 .flex {
     display: flex;
     justify-content: center;
     gap: 8px;
     align-content: center;
+}
+
+.wrap {
+    flex-wrap: wrap;
 }
 
 a {
@@ -238,6 +247,85 @@ textarea {
     background-color: darkred;
     border: 3px solid darkred;
 }
+
+.preview {
+    border: 0.25px solid black;
+    border-radius: 4px;
+    padding: 16px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    width: 100%;
+    overflow: auto;
+    min-height: 275px;
+    max-height: 50vh;
+}
+
+.editor textarea:focus {
+    outline: none;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  }
+  
+  /* Hide default HTML checkbox */
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: white;
+    border: 2px solid black;
+    transition: .4s;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 3px;
+    background-color: black;
+    transition: .4s;
+  }
+  
+  input:checked + .slider {
+    background-color: black;
+  }
+
+  input:checked + .slider:before {
+    background-color: white;
+  }
+  
+  input:focus + .slider {
+    box-shadow: 0 0 1px black;
+  }
+  
+  input:checked + .slider:before {
+    -webkit-transform: translateX(24px);
+    -ms-transform: translateX(24px);
+    transform: translateX(24px);
+  }
+  
+  .slider.round {
+    border-radius: 34px;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  }
 
 .hidden {
     display: none;

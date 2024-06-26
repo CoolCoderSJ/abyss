@@ -7,11 +7,46 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.3.0/animate.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@latest"></script>
     <title>abyss</title>
   </head>
   <body>
     <script>
       new WOW().init();
+
+      const handlePost = () => {
+        if (document.querySelector('#post').value.length < 1) {
+          alert('You must write something before you can post it.');
+          return false;
+        }
+
+        for (let i=0; i<document.querySelector('#post').value.length; i++) {
+          setTimeout(() => {
+            document.querySelector('#post').value = document.querySelector('#post').value.slice(0,-1)
+          }, 100*i)
+        }
+
+        const textWrapper = document.querySelector('#preview');
+        textWrapper.innerHTML = textWrapper.textContent.replace(/\S/g, "<span class='letter'>$&</span>");
+
+        anime.timeline({loop: false})
+          .add({
+            targets: '#preview .letter',
+            opacity: 0,
+            duration: 2250,
+            easing: "easeOutExpo",
+            delay: (el, i) => 125 * (i+1)
+          }).then(() => {
+            if (!document.querySelector('#disappear').checked) {
+              document.querySelector('form').submit();
+            }
+          })
+
+        if (document.querySelector('#disappear').checked) {
+          return false;
+        }
+      }
     </script>
 
     <nav>
@@ -34,26 +69,40 @@
     {% endwith %}
 
     <main class="hero">
-      <h1>What's on your mind today?</h1>
-
-        <form class="nostyles" method="post" action="/">
+        <div class="flex wrap">
+        <form class="nostyles" method="post" action="/post" onsubmit="handlePost(); return false">
+          <h1>What's on your mind today?</h1>
             <div class="editor">
-                <textarea name="thought" id="post" placeholder="Write your thoughts here..." style="width: 500px; height: 200px; resize: none"></textarea>
+                <textarea name="thought" id="post" placeholder="Write your thoughts here..." style="width: 500px; height: 200px; resize: none" onkeyup="document.querySelector('#preview').innerHTML = DOMPurify.sanitize(marked.parse(this.value));"></textarea>
                 <div class="action-bar">
                     <div class="section">
-                        <button type="button" class="secondary" onclick="document.querySelector('#post').value += '**bolded text here**'; document.querySelector('#post').focus()"><b>B</b></button>
-                        <button type="button" class="secondary" onclick="document.querySelector('#post').value += '*italicized text here*'; document.querySelector('#post').focus()"><i>I</i></button>
-                        <button type="button" class="secondary" onclick="document.querySelector('#post').value += '<u>underlined text here</u>'; document.querySelector('#post').focus()" style="text-decoration: underline;">U</button>
-                        <button type="button" class="secondary" onclick="document.querySelector('#post').value += '~~striked text here~~'; document.querySelector('#post').focus()" style="text-decoration: line-through;">S</button>
+                        <button type="button" class="secondary" onclick="document.querySelector('#post').value += '**bolded text here**';  document.querySelector('#preview').innerHTML = DOMPurify.sanitize(marked.parse(document.querySelector('#post').value)); document.querySelector('#post').focus()"><b>B</b></button>
+                        <button type="button" class="secondary" onclick="document.querySelector('#post').value += '*italicized text here*';  document.querySelector('#preview').innerHTML = DOMPurify.sanitize(marked.parse(document.querySelector('#post').value)); document.querySelector('#post').focus()"><i>I</i></button>
+                        <button type="button" class="secondary" onclick="document.querySelector('#post').value += '<u>underlined text here</u>';  document.querySelector('#preview').innerHTML = DOMPurify.sanitize(marked.parse(document.querySelector('#post').value)); document.querySelector('#post').focus()" style="text-decoration: underline;">U</button>
+                        <button type="button" class="secondary" onclick="document.querySelector('#post').value += '~~striked text here~~';  document.querySelector('#preview').innerHTML = DOMPurify.sanitize(marked.parse(document.querySelector('#post').value)); document.querySelector('#post').focus()" style="text-decoration: line-through;">S</button>
+                    </div>
+
+                    <div style="display: flex; align-items: center; gap: 8px; scale: 0.9">
+                      <p>Disappear Mode</p>
+                      <label class="switch">
+                        <input type="checkbox" id="disappear" style="margin-bottom: 0;" onchange="if (this.checked) alert('Disappear mode is on. Your thought will not be sent to the server, and therefore will not be saved in any way.')">
+                        <span class="slider round"></span>
+                      </label>
                     </div>
 
                     <div class="section">
-                        <button type="button" class="secondary" onclick="if (confirm('Are you sure? This will clear the editor and is not reversible.') == true) document.querySelector('#post').value = ''; document.querySelector('#post').focus()">Clear</button>
+                        <button type="button" class="secondary" onclick="if (confirm('Are you sure? This will clear the editor and is not reversible.') == true) document.querySelector('#post').value = '';  document.querySelector('#preview').innerHTML = DOMPurify.sanitize(marked.parse(document.querySelector('#post').value)); document.querySelector('#post').focus()">Clear</button>
                         <button type="submit">Done</button>
                     </div>
                 </div>
             </div>
         </form>
+
+        <div>
+          <h3 style="margin-top: 7rem;">Post Preview</h3>
+          <div id="preview" class="preview" style="width: 500px;"></div>
+        </div>
+        </div>
 
     </main>
   </body>
