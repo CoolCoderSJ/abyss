@@ -21,6 +21,8 @@
           return false;
         }
 
+        document.getElementsByClassName("action-bar")[0].classList.add("hidden")
+
         if (document.querySelector('#disappear').checked) {
           for (let i=0; i<document.querySelector('#post').value.length; i++) {
             setTimeout(() => {
@@ -108,5 +110,7 @@
         </div>
 
     </main>
+
+    {% if settings['disappearByDefault'] %} <script>document.querySelector('.switch').click()</script> {% endif %}
   </body>
 </html>

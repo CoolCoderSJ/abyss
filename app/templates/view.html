@@ -42,15 +42,17 @@
       <div style="width: 40%; text-align: left;">
       {% for post in posts %}
       {% set content = post['post'] %}
-        <div class="post wow fadeIn" style="margin-top: 10px;">
+        <div class="post wow fadeIn" style="margin-top: 25px;">
           <div id="post_{{ post['$id'] }}"></div>
           <script>document.querySelector("#post_{{ post['$id'] }}").innerHTML = DOMPurify.sanitize(marked.parse('{{ content | safe }}'))</script>
           <br>
           <small><i>{{ post['postedAt'] }}</i></small>
         </div>
-        <hr style="width: 90%">
+        <hr style="width: 90%; margin-top: 20px;">
       {% endfor %}
       </div>
+
+      <br><br>
 
     </main>
   </body>

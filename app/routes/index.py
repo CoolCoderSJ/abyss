@@ -9,7 +9,17 @@ def index():
     if 'user' not in session:
         return render_template('landing.html')
     
-    return render_template("index.html")
+    uid = session['user']
+    try:
+        settings = db.get_document("data", "settings", uid)
+    except:
+        settings = db.create_document("data", "settings", uid, {
+            "passwordHash": "",
+            "disappearByDefault": False,
+            "disablePage": False
+        })
+
+    return render_template("index.html", settings=settings)
 
 @app.post("/post")
 def post_thought():

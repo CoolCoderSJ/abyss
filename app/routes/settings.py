@@ -1,5 +1,5 @@
 from flask import render_template, session, abort, redirect, request, flash
-from app import app, db, get_all_docs, users
+from app import app, db, get_all_docs, users, Query
 
 from argon2 import PasswordHasher
 ph = PasswordHasher()
@@ -40,9 +40,10 @@ def change_password():
         flash("Passwords do not match.")
         return render_template("settings.html", **settings)
     
-    
-    if not users.update_user(user['$id'], password=request.form['password']):
-        flash("Failed to update password.")
+    try:
+        users.update_user(user['$id'], password=request.form['password'])
+    except Exception as e:
+        flash(f"Failed to update password - {e}")
         return render_template("settings.html", **settings)
     
     flash("Password updated.")
@@ -56,13 +57,17 @@ def change_details():
     settings = db.get_document("data", 'settings', session['user'])
     user = users.get(session['user'])
 
-    if not users.update_email(user['$id'], email=request.form['email']):
-        flash("Failed to update email.")
-        return render_template("settings.html", settings=settings, user=user)
+    try: users.update_email(user['$id'], email=request.form['email'])
+    except Exception as e:
+        if str(e) != "A target with the same ID already exists.":
+            flash(f"Failed to update email - {e}")
+            return render_template("settings.html", settings=settings, user=user)
 
-    if not users.update_name(user['$id'], name=request.form['name']):
-        flash("Failed to update name.")
-        return render_template("settings.html", settings=settings, user=user)
+    try: users.update_name(user['$id'], name=request.form['name'])
+    except Exception as e:
+        if str(e) != "A target with the same ID already exists.":
+            flash(f"Failed to update name - {e}")
+            return render_template("settings.html", settings=settings, user=user)
     
     flash("Details updated.")
     return redirect('/settings')
@@ -76,12 +81,17 @@ def delete_account():
 
     user = users.get(session['user'])
     
-    if not users.delete(user['$id']):
+    db.delete_document("data", 'settings', session['user'])
+    posts = get_all_docs("data", "posts", [Query.equal("uid", session['user'])])
+    for post in posts:
+        db.delete_document("data", "posts", post['$id'])
+
+    try:
+        users.delete(user['$id'])
+    except:
         flash("Failed to delete account.")
         return render_template("settings.html", settings=settings, user=user)
     
-    db.delete_document("data", 'settings', session['user'])
-
     session.clear()
     flash("Account deleted.")
     return redirect('/login')
@@ -98,9 +108,14 @@ def changeSettings():
     hash = ph.hash(passwordHash) if passwordHash else ""
 
     try: 
-        db.update_document("data", "settings", session['user'], {"passwordHash": passwordHash, "disappearByDefault": disappearByDefault, "disablePage": disablePage})
+        db.update_document("data", "settings", session['user'], {"disappearByDefault": disappearByDefault, "disablePage": disablePage})
     except:
-        db.create_document("data", "settings", session['user'], {"passwordHash": passwordHash, "disappearByDefault": disappearByDefault, "disablePage": disablePage})
+        db.create_document("data", "settings", session['user'], {"disappearByDefault": disappearByDefault, "disablePage": disablePage})
+    
+    if "usepassw" in request.form and passwordHash:
+        db.update_document("data", "settings", session['user'], {"passwordHash": hash})
+    elif not "usepassw" in request.form:
+        db.update_document("data", "settings", session['user'], {"passwordHash": ""})
     
     flash("Settings updated.")
     return redirect('/settings')

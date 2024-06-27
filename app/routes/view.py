@@ -3,6 +3,9 @@ from app import app, db, get_all_docs, users, Query
 from cryptography.fernet import Fernet
 import base64
 from datetime import datetime
+from argon2 import PasswordHasher
+ph = PasswordHasher()
+
 
 @app.route("/view/<uid>")
 def view_user(uid):
@@ -33,10 +36,16 @@ def view_user(uid):
 @app.route("/view/<uid>/password", methods=['POST'])
 def view_user_password(uid):
     settings = db.get_document("data", "settings", uid)
+
+    if settings['disablePage']:
+        return render_template("disabled.html")
+
     if not settings['passwordHash']:
         return redirect(f"/view/{uid}")
 
-    if not ph.verify(settings['passwordHash'], request.form['password']):
+    try: 
+        ph.verify(settings['passwordHash'], request.form['password'])
+    except:
         flash("Invalid password.")
         return render_template("password.html", uid=uid)
 
