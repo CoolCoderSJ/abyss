@@ -21,10 +21,12 @@
           return false;
         }
 
-        for (let i=0; i<document.querySelector('#post').value.length; i++) {
-          setTimeout(() => {
-            document.querySelector('#post').value = document.querySelector('#post').value.slice(0,-1)
-          }, 100*i)
+        if (document.querySelector('#disappear').checked) {
+          for (let i=0; i<document.querySelector('#post').value.length; i++) {
+            setTimeout(() => {
+              document.querySelector('#post').value = document.querySelector('#post').value.slice(0,-1)
+            }, 100*i)
+          }
         }
 
         const textWrapper = document.querySelector('#preview');
@@ -36,10 +38,11 @@
             opacity: 0,
             duration: 2250,
             easing: "easeOutExpo",
-            delay: (el, i) => 125 * (i+1)
-          }).then(() => {
-            if (!document.querySelector('#disappear').checked) {
-              document.querySelector('form').submit();
+            delay: (el, i) => 125 * (i+1), 
+            complete: () => {
+              if (!document.querySelector('#disappear').checked) {
+                document.querySelector('form').submit();
+              }
             }
           })
 
@@ -50,13 +53,13 @@
     </script>
 
     <nav>
-        <div>
-          <h2><strong>abyss<span class="primary">.</span></strong></h2>
-        </div>
-        <div>
-          <a href="/settings">Settings</a>
-        </div>
-      </nav>
+      <div>
+        <h2><a href="/"><strong>abyss<span class="primary">.</span></strong></a></h2>
+      </div>
+      <div>
+        <a href="/settings">Settings</a>
+      </div>
+    </nav>
 
     {% with messages = get_flashed_messages() %}
     {% if messages %}
@@ -73,13 +76,13 @@
         <form class="nostyles" method="post" action="/post" onsubmit="handlePost(); return false">
           <h1>What's on your mind today?</h1>
             <div class="editor">
-                <textarea name="thought" id="post" placeholder="Write your thoughts here..." style="width: 500px; height: 200px; resize: none" onkeyup="document.querySelector('#preview').innerHTML = DOMPurify.sanitize(marked.parse(this.value));"></textarea>
+                <textarea name="thought" id="post" placeholder="Write your thoughts here..." style="width: 500px; height: 200px; resize: none" onkeyup="document.querySelector('#preview').innerHTML = DOMPurify.sanitize(marked.parse(this.value.replaceAll('\n', '<br>')));"></textarea>
                 <div class="action-bar">
                     <div class="section">
-                        <button type="button" class="secondary" onclick="document.querySelector('#post').value += '**bolded text here**';  document.querySelector('#preview').innerHTML = DOMPurify.sanitize(marked.parse(document.querySelector('#post').value)); document.querySelector('#post').focus()"><b>B</b></button>
-                        <button type="button" class="secondary" onclick="document.querySelector('#post').value += '*italicized text here*';  document.querySelector('#preview').innerHTML = DOMPurify.sanitize(marked.parse(document.querySelector('#post').value)); document.querySelector('#post').focus()"><i>I</i></button>
-                        <button type="button" class="secondary" onclick="document.querySelector('#post').value += '<u>underlined text here</u>';  document.querySelector('#preview').innerHTML = DOMPurify.sanitize(marked.parse(document.querySelector('#post').value)); document.querySelector('#post').focus()" style="text-decoration: underline;">U</button>
-                        <button type="button" class="secondary" onclick="document.querySelector('#post').value += '~~striked text here~~';  document.querySelector('#preview').innerHTML = DOMPurify.sanitize(marked.parse(document.querySelector('#post').value)); document.querySelector('#post').focus()" style="text-decoration: line-through;">S</button>
+                        <button type="button" class="secondary" onclick="document.querySelector('#post').value += '**bolded text here**';  document.querySelector('#preview').innerHTML = DOMPurify.sanitize(marked.parse(document.querySelector('#post').value.replaceAll('\n', '<br>'))); document.querySelector('#post').focus()"><b>B</b></button>
+                        <button type="button" class="secondary" onclick="document.querySelector('#post').value += '*italicized text here*';  document.querySelector('#preview').innerHTML = DOMPurify.sanitize(marked.parse(document.querySelector('#post').value.replaceAll('\n', '<br>'))); document.querySelector('#post').focus()"><i>I</i></button>
+                        <button type="button" class="secondary" onclick="document.querySelector('#post').value += '<u>underlined text here</u>';  document.querySelector('#preview').innerHTML = DOMPurify.sanitize(marked.parse(document.querySelector('#post').value.replaceAll('\n', '<br>'))); document.querySelector('#post').focus()" style="text-decoration: underline;">U</button>
+                        <button type="button" class="secondary" onclick="document.querySelector('#post').value += '~~striked text here~~';  document.querySelector('#preview').innerHTML = DOMPurify.sanitize(marked.parse(document.querySelector('#post').value.replaceAll('\n', '<br>'))); document.querySelector('#post').focus()" style="text-decoration: line-through;">S</button>
                     </div>
 
                     <div style="display: flex; align-items: center; gap: 8px; scale: 0.9">
@@ -91,7 +94,7 @@
                     </div>
 
                     <div class="section">
-                        <button type="button" class="secondary" onclick="if (confirm('Are you sure? This will clear the editor and is not reversible.') == true) document.querySelector('#post').value = '';  document.querySelector('#preview').innerHTML = DOMPurify.sanitize(marked.parse(document.querySelector('#post').value)); document.querySelector('#post').focus()">Clear</button>
+                        <button type="button" class="secondary" onclick="if (confirm('Are you sure? This will clear the editor and is not reversible.') == true) document.querySelector('#post').value = '';  document.querySelector('#preview').innerHTML = DOMPurify.sanitize(marked.parse(document.querySelector('#post').value.replaceAll('\n', '<br>'))); document.querySelector('#post').focus()">Clear</button>
                         <button type="submit">Done</button>
                     </div>
                 </div>

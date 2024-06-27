@@ -2,6 +2,7 @@ from flask import render_template, session, abort, redirect, request, flash
 from app import app, db, get_all_docs, users
 from datetime import datetime
 from cryptography.fernet import Fernet
+import base64
 
 @app.route("/")
 def index():
@@ -20,9 +21,10 @@ def post_thought():
         return redirect('/')
 
     user = users.get(session['user'])
-    f = Fernet(user['password'])
+    key = base64.urlsafe_b64encode(user['password'].encode("utf-8").ljust(32)[:32])
+    f = Fernet(key)
 
-    db.create_document("data", "posts", {"thought": f.encrypt(request.form['thought'].encode("utf-8")).decode("utf-8"), "uid": session['user'], "postedAt": datetime.now().isoformat()})
+    db.create_document("data", "posts", "unique()", {"post": f.encrypt(request.form['thought'].encode("utf-8")).decode("utf-8"), "uid": session['user'], "postedAt": datetime.now().isoformat()})
     
     flash("Find peace knowing your thought is drifting away...")
     return redirect('/')

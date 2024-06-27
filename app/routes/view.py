@@ -1,6 +1,8 @@
 from flask import render_template, session, abort, redirect, request, flash
-from app import app, db, get_all_docs, users
+from app import app, db, get_all_docs, users, Query
 from cryptography.fernet import Fernet
+import base64
+from datetime import datetime
 
 @app.route("/view/<uid>")
 def view_user(uid):
@@ -21,10 +23,12 @@ def view_user(uid):
 
     posts = get_all_docs("data", "posts", [Query.equal("uid", uid)])
     user = users.get(uid)
-    f = Fernet(user['password'])
+    key = base64.urlsafe_b64encode(user['password'].encode("utf-8").ljust(32)[:32])
+    f = Fernet(key)
     for post in posts:
-        post['thought'] = f.decrypt(post['thought'].encode("utf-8")).decode("utf-8")
-    return render_template("view.html", posts=posts)
+        post['post'] = f.decrypt(post['post'].encode("utf-8")).decode("utf-8").replace("\n", "<br>").replace("\r", "")
+        post['postedAt'] = datetime.fromisoformat(post['postedAt']).strftime("%Y-%m-%d %I:%M %p")
+    return render_template("view.html", posts=posts, name=user['name'])
 
 @app.route("/view/<uid>/password", methods=['POST'])
 def view_user_password(uid):
@@ -38,7 +42,9 @@ def view_user_password(uid):
 
     posts = get_all_docs("data", "posts", [Query.equal("uid", uid)])
     user = users.get(uid)
-    f = Fernet(user['password'])
+    key = base64.urlsafe_b64encode(user['password'].encode("utf-8").ljust(32)[:32])
+    f = Fernet(key)
     for post in posts:
-        post['thought'] = f.decrypt(post['thought'].encode("utf-8")).decode("utf-8")
-    return render_template("view.html", posts=posts)
+        post['post'] = f.decrypt(post['post'].encode("utf-8")).decode("utf-8").replace("\n", "<br>").replace("\r", "")
+        post['postedAt'] = datetime.fromisoformat(post['postedAt']).strftime("%Y-%m-%d %I:%M %p")
+    return render_template("view.html", posts=posts, name=user['name'])

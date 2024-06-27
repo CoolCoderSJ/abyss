@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/static/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.3.0/animate.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@latest"></script>
+    <title>{{ name }} | abyss</title>
+  </head>
+  <body>
+    <script>
+      new WOW().init();
+    </script>
+
+    <nav>
+        <div>
+          <h2><a href="/"><strong>abyss<span class="primary">.</span></strong></a></h2>
+        </div>
+        <div>
+          <a href="/">Home</a>
+        </div>
+    </nav>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <main class="hero">
+      <h1>{{ name }}'s thoughts</h1>
+      <br><br>
+      
+      <div style="width: 40%; text-align: left;">
+      {% for post in posts %}
+      {% set content = post['post'] %}
+        <div class="post wow fadeIn" style="margin-top: 10px;">
+          <div id="post_{{ post['$id'] }}"></div>
+          <script>document.querySelector("#post_{{ post['$id'] }}").innerHTML = DOMPurify.sanitize(marked.parse('{{ content | safe }}'))</script>
+          <br>
+          <small><i>{{ post['postedAt'] }}</i></small>
+        </div>
+        <hr style="width: 90%">
+      {% endfor %}
+      </div>
+
+    </main>
+  </body>
+</html>
