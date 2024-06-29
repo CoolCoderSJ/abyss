@@ -22,7 +22,7 @@ def login_post():
     email = request.form['email']
     password = request.form['password']
 
-    allusers = users.list(queries=[Query.equal('name', email)])['users']
+    allusers = users.list(queries=[Query.equal('email', email)])['users']
     if len(allusers) == 0:
         sessid = users.create_argon2_user('unique()', email=email, name=email.split("@")[0], password=password)['$id']
         session['user'] = sessid
