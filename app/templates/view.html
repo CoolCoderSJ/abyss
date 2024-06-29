@@ -44,7 +44,8 @@
       {% set content = post['post'] %}
         <div class="post wow fadeIn" style="margin-top: 25px;">
           <div id="post_{{ post['$id'] }}"></div>
-          <script>document.querySelector("#post_{{ post['$id'] }}").innerHTML = DOMPurify.sanitize(marked.parse('{{ content | safe }}'))</script>
+          <div class="hidden" id="post_{{ post['$id'] }}_content">{{ content | safe }}</div>
+          <script>document.querySelector("#post_{{ post['$id'] }}").innerHTML = DOMPurify.sanitize(marked.parse(document.getElementById('post_{{ post["$id"] }}_content').innerHTML))</script>
           <br>
           <small><i>{{ post['postedAt'] }}</i></small>
         </div>
