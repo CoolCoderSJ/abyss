@@ -25,6 +25,7 @@ def view_user(uid):
         return render_template("password.html", uid=uid)
 
     posts = get_all_docs("data", "posts", [Query.equal("uid", uid)])
+    posts.reverse()
     user = users.get(uid)
     key = base64.urlsafe_b64encode(user['password'].encode("utf-8").ljust(32)[:32])
     f = Fernet(key)
@@ -50,6 +51,7 @@ def view_user_password(uid):
         return render_template("password.html", uid=uid)
 
     posts = get_all_docs("data", "posts", [Query.equal("uid", uid)])
+    posts.reverse()
     user = users.get(uid)
     key = base64.urlsafe_b64encode(user['password'].encode("utf-8").ljust(32)[:32])
     f = Fernet(key)
