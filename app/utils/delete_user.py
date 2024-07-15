@@ -1,23 +1,22 @@
 import os
 from appwrite.client import Client
-from appwrite.services.databases import Databases
-import sqlite3
-from app import dict_factory
+from appwrite.services.users import Users
+import sqlite3, shortuuid
 
 if os.environ['DATABASE'] == "appwrite":
     client = Client()
     client.set_endpoint(os.environ['APPWRITE_HOST'])
     client.set_project(os.environ['APPWRITE_ID'])
     client.set_key(os.environ['APPWRITE_KEY'])
-    db = Databases(client)
+    users = Users(client)
 
-def get_document(database, collection, document_id):
+def delete_user(uid):
     if os.environ['DATABASE'] == "appwrite":
-        return db.get_document(database, collection, document_id)
+        return users.delete(uid)
     elif os.environ['DATABASE'] == "sqlite":
         conn = sqlite3.connect("data.db")
-        conn.row_factory = dict_factory
         cursor = conn.cursor()
-        res = cursor.execute(f"SELECT * FROM {collection} WHERE uid = ?", (document_id,)).fetchone()
+        cursor.execute(f"DELETE FROM auth WHERE uid = ?", (uid))
+        conn.commit()
         conn.close()
-        return res
+        return True

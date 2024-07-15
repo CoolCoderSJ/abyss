@@ -1,5 +1,6 @@
 from flask import render_template, session, abort, redirect, request, flash
-from app import app, db, get_all_docs, users, Query
+from app import app, Query
+from app import list_users, create_user
 
 from argon2 import PasswordHasher
 ph = PasswordHasher()
@@ -22,9 +23,9 @@ def login_post():
     email = request.form['email']
     password = request.form['password']
 
-    allusers = users.list(queries=[Query.equal('email', email)])['users']
+    allusers = list_users([Query.equal("email", email)])
     if len(allusers) == 0:
-        sessid = users.create_argon2_user('unique()', email=email, name=email.split("@")[0], password=password)['$id']
+        sessid = create_user(email, email.split("@")[0], password)['$id']
         session['user'] = sessid
         return redirect("/")
     

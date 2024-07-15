@@ -1,5 +1,6 @@
 from flask import render_template, session, abort, redirect, request, flash
-from app import app, db, get_all_docs, users, Query
+from app import app, Query
+from app import get_document, create_document, get_user, update_user, delete_document, get_all_docs, delete_user
 
 from argon2 import PasswordHasher
 ph = PasswordHasher()
@@ -10,15 +11,15 @@ def settings():
         return redirect('/login')
     
     try:
-        settings = db.get_document("data", 'settings', session['user'])
+        settings = get_document("data", 'settings', session['user'])
     except:
-        settings = db.create_document("data", 'settings', session['user'], {
+        settings = create_document("data", 'settings', session['user'], {
             "passwordHash": "",
             "disappearByDefault": False,
             "disablePage": False
         })
         
-    user = users.get(session['user'])
+    user = get_user(session['user'])
 
     return render_template("settings.html", settings=settings, user=user)
 
@@ -27,8 +28,8 @@ def change_password():
     if 'user' not in session:
         return redirect('/login')
     
-    settings = db.get_document("data", 'settings', session['user'])
-    user = users.get(session['user'])
+    settings = get_document("data", 'settings', session['user'])
+    user = get_user(session['user'])
 
     try:
         ph.verify(user['password'], request.form['old'])
@@ -41,7 +42,7 @@ def change_password():
         return render_template("settings.html", **settings)
     
     try:
-        users.update_user(user['$id'], password=request.form['password'])
+        update_user(user['$id'], user['email'], user['name'], request.form['password'])
     except Exception as e:
         flash(f"Failed to update password - {e}")
         return render_template("settings.html", **settings)
@@ -54,21 +55,15 @@ def change_details():
     if 'user' not in session:
         return redirect('/login')
     
-    settings = db.get_document("data", 'settings', session['user'])
-    user = users.get(session['user'])
+    settings = get_document("data", 'settings', session['user'])
+    user = get_user(session['user'])
 
-    try: users.update_email(user['$id'], email=request.form['email'])
+    try: update_user(user['$id'], request.form['email'], request.form['name'], user['password'], updatePwd=False)
     except Exception as e:
         if str(e) != "A target with the same ID already exists.":
-            flash(f"Failed to update email - {e}")
+            flash(f"Failed to update - {e}")
             return render_template("settings.html", settings=settings, user=user)
 
-    try: users.update_name(user['$id'], name=request.form['name'])
-    except Exception as e:
-        if str(e) != "A target with the same ID already exists.":
-            flash(f"Failed to update name - {e}")
-            return render_template("settings.html", settings=settings, user=user)
-    
     flash("Details updated.")
     return redirect('/settings')
 
@@ -77,18 +72,19 @@ def delete_account():
     if 'user' not in session:
         return redirect('/login')
     
-    settings = db.get_document("data", 'settings', session['user'])
+    settings = get_document("data", 'settings', session['user'])
 
-    user = users.get(session['user'])
+    user = get_user(session['user'])
     
-    db.delete_document("data", 'settings', session['user'])
+    delete_document("data", 'settings', session['user'])
     posts = get_all_docs("data", "posts", [Query.equal("uid", session['user'])])
     for post in posts:
-        db.delete_document("data", "posts", post['$id'])
+        delete_document("data", "posts", post['$id'])
 
     try:
-        users.delete(user['$id'])
-    except:
+        delete_user(user['$id'])
+    except Exception as e:
+        print(e)
         flash("Failed to delete account.")
         return render_template("settings.html", settings=settings, user=user)
     
@@ -110,7 +106,7 @@ def changeSettings():
     try: 
         db.update_document("data", "settings", session['user'], {"disappearByDefault": disappearByDefault, "disablePage": disablePage})
     except:
-        db.create_document("data", "settings", session['user'], {"disappearByDefault": disappearByDefault, "disablePage": disablePage})
+        create_document("data", "settings", session['user'], {"disappearByDefault": disappearByDefault, "disablePage": disablePage})
     
     if "usepassw" in request.form and passwordHash:
         db.update_document("data", "settings", session['user'], {"passwordHash": hash})

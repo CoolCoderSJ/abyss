@@ -1,7 +1,7 @@
 import os
 from appwrite.client import Client
 from appwrite.services.databases import Databases
-import sqlite3
+import sqlite3, shortuuid
 
 if os.environ['DATABASE'] == "appwrite":
     client = Client()
@@ -14,6 +14,8 @@ def create_document(database, collection, document_id, data):
     if os.environ['DATABASE'] == "appwrite":
         return db.create_document(database, collection, document_id, data)
     elif os.environ['DATABASE'] == "sqlite":
+        if document_id == "unique()":
+            document_id = shortuuid.uuid()
         conn = sqlite3.connect("data.db")
         cursor = conn.cursor()
         d = [document_id]

@@ -7,7 +7,6 @@ import os
 from appwrite.client import Client
 from appwrite.services.databases import Databases
 from appwrite.query import Query
-from appwrite.id import ID
 from appwrite.services.users import Users
 
 import sqlite3
@@ -51,7 +50,7 @@ elif os.environ['DATABASE'] == "sqlite":
     print(rows)
 
     if len(rows) == 0:
-        cursor.execute("CREATE TABLE auth (uid TEXT PRIMARY KEY, password TEXT);")
+        cursor.execute("CREATE TABLE auth (uid TEXT PRIMARY KEY, email TEXT, name TEXT, password TEXT);")
         cursor.execute("CREATE TABLE posts (id TEXT PRIMARY KEY, uid TEXT, post TEXT, postedAt TEXT, hidden INTEGER);")
         cursor.execute("CREATE TABLE settings (uid TEXT PRIMARY KEY, passwordHash TEXT, disappearByDefault INTEGER, disablePage INTEGER);")
         conn.commit()
@@ -65,27 +64,6 @@ app.config["SESSION_TYPE"] = "filesystem"
 app.config["SECRET_KEY"] = os.environ['SECRET_KEY']
 app.config["SESSION_PERMANENT"] = True
 Session(app)
-
-def get_all_docs(data, collection, queries=[]):
-    docs = []
-    offset = 0
-    while True:
-        try: 
-            queries.remove(Query.offset(offset))
-            queries.remove(Query.limit(100))
-        except:
-            break
-    queries.append(Query.offset(offset))
-    queries.append(Query.limit(100))
-    print(queries)
-    while True:
-        results = db.list_documents(data, collection, queries=queries)
-        if len(docs) == results['total']:
-            break
-        results = results['documents']
-        docs += results
-        offset += len(results)
-    return docs
 
 def dict_factory(cursor, row):
     d = {}

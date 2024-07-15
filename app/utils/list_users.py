@@ -1,7 +1,7 @@
 import os
 from appwrite.client import Client
-from appwrite.services.databases import Databases
-import sqlite3
+from appwrite.services.users import Users
+import sqlite3, json
 from app import dict_factory
 
 if os.environ['DATABASE'] == "appwrite":
@@ -9,15 +9,20 @@ if os.environ['DATABASE'] == "appwrite":
     client.set_endpoint(os.environ['APPWRITE_HOST'])
     client.set_project(os.environ['APPWRITE_ID'])
     client.set_key(os.environ['APPWRITE_KEY'])
-    db = Databases(client)
+    users = Users(client)
 
-def get_document(database, collection, document_id):
+def list_users(queries=[]):
     if os.environ['DATABASE'] == "appwrite":
-        return db.get_document(database, collection, document_id)
+        return users.list(queries)['users']
     elif os.environ['DATABASE'] == "sqlite":
         conn = sqlite3.connect("data.db")
         conn.row_factory = dict_factory
         cursor = conn.cursor()
-        res = cursor.execute(f"SELECT * FROM {collection} WHERE uid = ?", (document_id,)).fetchone()
+        q = []
+        for query in queries:
+            query = json.loads(query)
+            q.append(f"{query['attribute']} {query['operator'].replace('equal', '=')} {query['values'][0]}")
+        q = " AND ".join(q)
+        r = cursor.execute(f"SELECT * FROM auth ?", (q,)).fetchall()
         conn.close()
-        return res
+        return r
