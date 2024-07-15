@@ -4,6 +4,8 @@ from app.utils import get_document, create_document, get_user, update_user, dele
 
 from argon2 import PasswordHasher
 ph = PasswordHasher()
+from cryptography.fernet import Fernet
+import base64
 
 @app.get("/settings")
 def settings():
@@ -31,6 +33,12 @@ def change_password():
     settings = get_document("data", 'settings', session['user'])
     user = get_user(session['user'])
 
+    key = base64.urlsafe_b64encode(user['password'].encode("utf-8").ljust(32)[:32])
+    posts = get_all_docs("data", "posts", [Query.equal("uid", session['user'])])
+    f = Fernet(key)
+    for post in posts:
+        post['post'] = f.decrypt(post['post'].encode("utf-8")).decode("utf-8")
+
     try:
         ph.verify(user['password'], request.form['old'])
     except:
@@ -47,6 +55,12 @@ def change_password():
         flash(f"Failed to update password - {e}")
         return render_template("settings.html", **settings)
     
+    key = base64.urlsafe_b64encode(request.form['password'].encode("utf-8").ljust(32)[:32])
+    f = Fernet(key)
+    for post in posts:
+        post['post'] = f.encrypt(post['post'].encode("utf-8")).decode("utf-8")
+        update_document("data", "posts", post['$id'], {"post": post['post']})
+
     flash("Password updated.")
     return redirect('/settings')
 
