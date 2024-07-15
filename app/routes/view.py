@@ -1,18 +1,19 @@
 from flask import render_template, session, abort, redirect, request, flash
-from app import app, db, get_all_docs, users, Query
+from app import app, Query
 from cryptography.fernet import Fernet
 import base64
 from datetime import datetime
 from argon2 import PasswordHasher
 ph = PasswordHasher()
 
+from app.utils import get_document, create_document, get_user, get_all_docs
 
 @app.route("/view/<uid>")
 def view_user(uid):
     try:
-        settings = db.get_document("data", "settings", uid)
+        settings = get_document("data", "settings", uid)
     except:
-        settings = db.create_document("data", "settings", uid, {
+        settings = create_document("data", "settings", uid, {
             "passwordHash": "",
             "disappearByDefault": False,
             "disablePage": False
@@ -26,7 +27,7 @@ def view_user(uid):
 
     posts = get_all_docs("data", "posts", [Query.equal("uid", uid)])
     posts.reverse()
-    user = users.get(uid)
+    user = get_user(uid)
     key = base64.urlsafe_b64encode(user['password'].encode("utf-8").ljust(32)[:32])
     f = Fernet(key)
     for post in posts:
@@ -36,7 +37,7 @@ def view_user(uid):
 
 @app.route("/view/<uid>/password", methods=['POST'])
 def view_user_password(uid):
-    settings = db.get_document("data", "settings", uid)
+    settings = get_document("data", "settings", uid)
 
     if settings['disablePage']:
         return render_template("disabled.html")
@@ -52,7 +53,7 @@ def view_user_password(uid):
 
     posts = get_all_docs("data", "posts", [Query.equal("uid", uid)])
     posts.reverse()
-    user = users.get(uid)
+    user = get_user(uid)
     key = base64.urlsafe_b64encode(user['password'].encode("utf-8").ljust(32)[:32])
     f = Fernet(key)
     for post in posts:

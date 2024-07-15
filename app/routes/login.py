@@ -1,6 +1,6 @@
 from flask import render_template, session, abort, redirect, request, flash
 from app import app, Query
-from app import list_users, create_user
+from app.utils import list_users, create_user
 
 from argon2 import PasswordHasher
 ph = PasswordHasher()

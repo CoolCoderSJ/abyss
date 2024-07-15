@@ -1,6 +1,6 @@
 from flask import render_template, session, abort, redirect, request, flash
 from app import app, Query
-from app import get_document, create_document, get_user, update_user, delete_document, get_all_docs, delete_user
+from app.utils import get_document, create_document, get_user, update_user, delete_document, get_all_docs, delete_user, update_document
 
 from argon2 import PasswordHasher
 ph = PasswordHasher()
@@ -104,14 +104,15 @@ def changeSettings():
     hash = ph.hash(passwordHash) if passwordHash else ""
 
     try: 
-        db.update_document("data", "settings", session['user'], {"disappearByDefault": disappearByDefault, "disablePage": disablePage})
-    except:
+        update_document("data", "settings", session['user'], {"disappearByDefault": disappearByDefault, "disablePage": disablePage})
+    except Exception as e:
+        print(e)
         create_document("data", "settings", session['user'], {"disappearByDefault": disappearByDefault, "disablePage": disablePage})
     
     if "usepassw" in request.form and passwordHash:
-        db.update_document("data", "settings", session['user'], {"passwordHash": hash})
+        update_document("data", "settings", session['user'], {"passwordHash": hash})
     elif not "usepassw" in request.form:
-        db.update_document("data", "settings", session['user'], {"passwordHash": ""})
+        update_document("data", "settings", session['user'], {"passwordHash": ""})
     
     flash("Settings updated.")
     return redirect('/settings')

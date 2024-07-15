@@ -71,5 +71,4 @@ def dict_factory(cursor, row):
         d[col[0]] = row[idx]
     return d
 
-from .utils import *
 from .routes import *

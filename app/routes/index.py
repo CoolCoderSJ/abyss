@@ -4,7 +4,7 @@ from datetime import datetime
 from cryptography.fernet import Fernet
 import base64, os
 
-from app import get_document, create_document, get_user
+from app.utils import get_document, create_document, get_user
 
 @app.route("/")
 def index():
@@ -36,7 +36,7 @@ def post_thought():
     key = base64.urlsafe_b64encode(user['password'].encode("utf-8").ljust(32)[:32])
     f = Fernet(key)
 
-    create_document("data", "posts", "unique()", {"post": f.encrypt(request.form['thought'].encode("utf-8")).decode("utf-8"), "uid": session['user'], "postedAt": datetime.now().isoformat()})
+    create_document("data", "posts", "unique()", {"post": f.encrypt(request.form['thought'].encode("utf-8")).decode("utf-8"), "uid": session['user'], "postedAt": datetime.now().isoformat(), "hidden": False})
     
     flash("Find peace knowing your thought is drifting away...")
     return redirect('/')
