@@ -33,7 +33,7 @@ def create_document(database, collection, document_id, data):
         elif collection == "settings":
             order = ['uid', 'passwordHash', 'disappearByDefault', 'disablePage']
 
-        d = [document_id]
+        d = [document_id] if collection == "posts" else []
         data = {k: data[k] for k in order if k in data.keys()}
         d.extend(data.values())
         d = tuple(d)

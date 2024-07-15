@@ -9,7 +9,9 @@ from appwrite.services.databases import Databases
 from appwrite.query import Query
 from appwrite.services.users import Users
 
-import sqlite3
+import sqlite3, shortuuid
+from argon2 import PasswordHasher
+ph = PasswordHasher()
 
 load_dotenv()
 
@@ -40,6 +42,9 @@ if os.environ['DATABASE'] == "appwrite":
         db.create_boolean_attribute("data", "settings", key="disappearByDefault", required=False)
         db.create_boolean_attribute("data", "settings", key="disablePage", required=False)
 
+        print("Creating admin account....")
+        users.create_argon2_user('unique()', email=os.environ['ADMIN_EMAIL'], name=os.environ['ADMIN_EMAIL'].split("@")[0], password=os.environ['ADMIN_PASSWORD'])
+
         print("Database created.")
 
 elif os.environ['DATABASE'] == "sqlite":
@@ -53,6 +58,7 @@ elif os.environ['DATABASE'] == "sqlite":
         cursor.execute("CREATE TABLE auth (uid TEXT PRIMARY KEY, email TEXT, name TEXT, password TEXT);")
         cursor.execute("CREATE TABLE posts (id TEXT PRIMARY KEY, uid TEXT, post TEXT, postedAt TEXT, hidden INTEGER);")
         cursor.execute("CREATE TABLE settings (uid TEXT PRIMARY KEY, passwordHash TEXT, disappearByDefault INTEGER, disablePage INTEGER);")
+        cursor.execute("INSERT INTO auth VALUES (?, ?, ?, ?)", (shortuuid.uuid(), os.environ['ADMIN_EMAIL'], os.environ['ADMIN_EMAIL'].split("@")[0], ph.hash(os.environ['ADMIN_PASSWORD'])))
         conn.commit()
 
     conn.close()

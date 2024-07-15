@@ -42,7 +42,8 @@
       <h1>Settings</h1>
 
       <br>
-      <p>Your view page is <a class="style-link" href="https://abyss.shuchir.dev/view/{{ settings['$id'] }}">https://abyss.shuchir.dev/view/{{ settings['$id'] }}</a></p>
+      <p>Your view page is <a class="style-link" href="/view/{{ settings['$id'] }}" id="viewLink">/view/{{ settings['$id'] }}</a></p>
+      <script>document.getElementById("viewLink").innerHTML = window.location.protocol + "//" + window.location.host + document.getElementById("viewLink").innerHTML</script>
       <br>
 
       <form action="/settings/updateDetails" method="post">

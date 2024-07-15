@@ -1,0 +1,5 @@
+appwrite
+shortuuid
+flask
+python-dotenv
+argon2-cffi

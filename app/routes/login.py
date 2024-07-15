@@ -1,6 +1,7 @@
 from flask import render_template, session, abort, redirect, request, flash
 from app import app, Query
 from app.utils import list_users, create_user
+import os
 
 from argon2 import PasswordHasher
 ph = PasswordHasher()
@@ -25,6 +26,10 @@ def login_post():
 
     allusers = list_users([Query.equal("email", email)])
     if len(allusers) == 0:
+        if os.environ['ALLOW_SIGNUPS'] == "false" or os.environ['SINGLE_USER'] == "true":
+            flash("Signups are disabled.")
+            return render_template("login.html")
+        
         sessid = create_user(email, email.split("@")[0], password)['$id']
         session['user'] = sessid
         return redirect("/")
