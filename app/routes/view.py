@@ -65,7 +65,7 @@ def view_user_password(uid):
     encKey = f.decrypt(settings['encryptionKey'].encode("utf-8")).decode("utf-8")
     key = base64.urlsafe_b64encode(encKey.encode("utf-8").ljust(32)[:32])
     f = Fernet(key)
-    
+
     for post in posts:
         post['post'] = f.decrypt(post['post'].encode("utf-8")).decode("utf-8").replace("\n", "<br>").replace("\r", "")
         post['postedAt'] = datetime.fromisoformat(post['postedAt']).strftime("%Y-%m-%d %I:%M %p")
