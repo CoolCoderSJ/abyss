@@ -34,10 +34,8 @@ def change_password():
     user = get_user(session['user'])
 
     key = base64.urlsafe_b64encode(user['password'].encode("utf-8").ljust(32)[:32])
-    posts = get_all_docs("data", "posts", [Query.equal("uid", session['user'])])
     f = Fernet(key)
-    for post in posts:
-        post['post'] = f.decrypt(post['post'].encode("utf-8")).decode("utf-8")
+    encKey = f.decrypt(settings['encryptionKey'].encode("utf-8")).decode("utf-8")
 
     try:
         ph.verify(user['password'], request.form['old'])
@@ -57,9 +55,7 @@ def change_password():
     
     key = base64.urlsafe_b64encode(request.form['password'].encode("utf-8").ljust(32)[:32])
     f = Fernet(key)
-    for post in posts:
-        post['post'] = f.encrypt(post['post'].encode("utf-8")).decode("utf-8")
-        update_document("data", "posts", post['$id'], {"post": post['post']})
+    update_document("data", "settings", user['$id'], {"encryptionKey": f.encrypt(encKey.encode("utf-8")).decode("utf-8")})
 
     flash("Password updated.")
     return redirect('/settings')
