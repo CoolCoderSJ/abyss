@@ -3,10 +3,12 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="/static/style.css" />
+    <link rel="stylesheet" href="/static/style.css" id="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.3.0/animate.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <title>Settings | abyss</title>
   </head>
   <body>
@@ -25,6 +27,12 @@
       </div>
       <div>
         <a href="/">Home</a>
+        <a id="mode-toggle" mode="light" style="cursor: pointer; margin-top: 4px;" onclick="let stylesheet = document.getElementById('stylesheet'); stylesheet.getAttribute('href') == '/static/style.css' ? stylesheet.setAttribute('href', '/static/dark.css') : stylesheet.setAttribute('href', '/static/style.css'); if (this.getAttribute('mode') == 'light') {this.innerHTML = `<ion-icon name='sunny-outline' style='padding-bottom: 0;''></ion-icon>`; this.setAttribute('mode', 'dark'); localStorage.setItem('theme', 'dark')} else {this.innerHTML = `<ion-icon name='moon-outline' style='padding-bottom: 0;'></ion-icon>`; this.setAttribute('mode', 'light'); localStorage.setItem('theme', 'light')}"><ion-icon name="moon-outline" style="padding-bottom: 0;"></ion-icon></a>
+        <script>
+          if (localStorage.getItem('theme') == 'dark') {
+            document.getElementById('mode-toggle').click()
+          }
+        </script>
       </div>
     </nav>
 
@@ -92,7 +100,7 @@
       <form action="/settings/change" method="post">
         <div class="selection_field">
           <label>Password Protect View Page</label>
-          <input type="checkbox" name="usepassw" value="on" {% if settings['passwordHash'] %}checked{% endif %} onchange="let elem = document.querySelector('#pwi'); document.querySelector('#passwordHash').classList.toggle('hidden'); !elem.getAttribute('required') ? elem.setAttribute('required', 'required') : elem.removeAttribute('required')">
+          <input type="checkbox" name="usepassw" value="on" {% if settings['passwordHash'] %}checked{% endif %} onchange="let elem = document.querySelector('#pwi'); document.querySelector('#passwordHash').classList.toggle('hidden'); this.checked ? elem.setAttribute('required', 'required') : elem.removeAttribute('required')">
         </div>
 
         <div id="passwordHash" class="field {% if not settings['passwordHash'] %}hidden{% endif %}">

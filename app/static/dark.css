@@ -1,13 +1,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap');
 
+:root {
+    --primary-bg: black;
+    --primary-text: white;
+    --lighter-bg: #383838;
+}
+
 html {
     scroll-behavior: smooth;
+    background-color: var(--primary-bg);
 }
 
 p, h1, h2, h3, h4, h5, h6, li, a, label, button, input, textarea, small {
     font-family: 'Merriweather', serif;
     margin-top: 2px;
     margin-bottom: 6px;
+    color: var(--primary-text);
 }
 
 * {
@@ -48,11 +56,11 @@ nav {
 
 nav a {
     text-decoration: none;
-    color: black;
+    color: var(--primary-text);
 }
 
 nav a:hover {
-    color: gray;
+    color: var(--lighter-bg);
 }
 
 nav div {
@@ -73,48 +81,50 @@ nav div {
 
 a {
     text-decoration: none;
-    color: black;
+    color: var(--primary-bg);
 }
 
 button a {
-    color: white !important;
+    color: var(--primary-text) !important;
 }
 
 button.secondary a {
-    color: black !important;
+    color: var(--primary-bg) !important;
 }
 
 button {
     padding: 8px 16px;
     border: none;
     border-radius: 4px;
-    background-color: black;
-    color: white;
+    background-color: var(--primary-bg);
+    color: var(--primary-text);
     cursor: pointer;
-    border: 1px solid black;
+    border: 1px solid var(--primary-text);
 }
 
 button.secondary {
-    color: black;
-    background-color: white;
+    color: var(--primary-bg);
+    background-color: var(--primary-text);
+    border: 1px solid var(--primary-text);
 }
 
 button:hover {
-    background-color: white;
-    color: black;
+    background-color: var(--primary-text);
+    color: var(--primary-bg);
+    border: 1px solid var(--primary-text);
 }
 
 button.secondary:hover {
-    background-color: black;
-    color: white;
+    background-color: var(--primary-bg);
+    color: var(--primary-text);
 }
 
 button a:hover {
-    color: black !important;
+    color: var(--primary-bg) !important;
 }
 
 button.secondary a:hover {
-    color: white !important;
+    color: var(--primary-text) !important;
 }
 
 section {
@@ -141,7 +151,7 @@ section {
 form {
     text-align: left;
     padding: 16px;
-    border: 1px solid black;
+    border: 1px solid var(--lighter-bg);
     border-radius: 4px;
     width: 100%;
 }
@@ -176,8 +186,10 @@ form button {
 
 input[type="text"], input[type="email"], input[type="password"] {
     padding: 8px;
-    border: 1px solid black;
+    border: 1px solid var(--lighter-bg);
     border-radius: 4px;
+    background-color: var(--primary-bg);
+    color: var(--primary-text)
 }
 
 input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus {
@@ -193,7 +205,7 @@ input[type="checkbox"], input[type="radio"] {
     -moz-appearance: none;
     width: 16px;
     height: 16px;
-    border: 2px solid black;
+    border: 2px solid var(--primary-text);
     border-radius: 4px;
     outline: none;
     cursor: pointer;
@@ -201,21 +213,23 @@ input[type="checkbox"], input[type="radio"] {
 }
 
 input[type="checkbox"]:checked, input[type="radio"]:checked {
-    background-color: black;
+    background-color: var(--primary-text);
 }
 
 .alert {
     padding: 16px;
-    border: 1px solid black;
+    border: 1px solid var(--primary-text);
     border-radius: 4px;
     margin-top: 8px;
     margin-bottom: 8px;
+    color: var(--primary-text);
+    background-color: var(--primary-bg);
 }
 
 .editor {
     padding: 16px;
-    border: 0.5px solid black;
-    border-radius: 4px;
+    border: 1px solid var(--lighter-bg);
+    border-radius: 6px;
     margin-top: 8px;
     margin-bottom: 8px;
 
@@ -226,6 +240,8 @@ textarea {
     border: none;
     border-radius: 4px;
     margin-top: 4px;
+    background-color: var(--primary-bg);
+    color: var(--primary-text);
 }
 
 .action-bar {
@@ -245,11 +261,17 @@ textarea {
 
 .danger {
     background-color: darkred;
-    border: 1px solid darkred;
+    border: 3px solid darkred;
+}
+
+.danger:hover {
+    background-color: var(--primary-bg);
+    border: 3px solid darkred;
+    color: var(--primary-text);
 }
 
 .preview {
-    border: 0.25px solid black;
+    border: 0.25px solid var(--lighter-bg);
     border-radius: 4px;
     padding: 16px;
     margin-top: 8px;
@@ -285,8 +307,8 @@ textarea {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: white;
-    border: 2px solid black;
+    background-color: var(--primary-text);
+    border: 2px solid var(--primary-bg);
     transition: .4s;
   }
   
@@ -297,20 +319,21 @@ textarea {
     width: 26px;
     left: 3px;
     bottom: 2px;
-    background-color: black;
+    background-color: var(--primary-bg);
     transition: .4s;
   }
   
   input:checked + .slider {
-    background-color: black;
+    background-color: var(--primary-bg);
+    border: 2px solid var(--primary-text);
   }
 
   input:checked + .slider:before {
-    background-color: white;
+    background-color: var(--primary-text);
   }
   
   input:focus + .slider {
-    box-shadow: 0 0 1px black;
+    box-shadow: 0 0 1px var(--primary-bg);
   }
   
   input:checked + .slider:before {
@@ -332,6 +355,7 @@ textarea {
 }
 
 .style-link {
+    color: var(--primary-text);
     text-decoration: underline;
 }
 
