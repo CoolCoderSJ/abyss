@@ -15,3 +15,6 @@ If you're interested in self-hosting abyss, you can do so by following these ste
     a. It is recommended to use appwrite for your database for optimal performance- however, sqlite is a great option for a quick local install or in situations with low load. In both cases, abyss will handle database/table creation for you when you first start the app.
 4. Run `python main.py`
 5. abyss should now be running on `0.0.0.0:9023`
+
+> [!NOTE]
+> If you ran this program before July 17th around 3pm EST (or before [this](https://github.com/CoolCoderSJ/abyss/commit/49384e8a3036260d84dc72ce92ae5fc62fcaefef) commit), run `python migration.py` to convert to the new encryption method. This uses a randomly generated encryption key to encrypt posts instead of the user's password. This way, whenever passwords are updated, only the encryption key needs to be re-encrypted, not every post.
