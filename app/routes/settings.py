@@ -1,4 +1,4 @@
-from flask import render_template, session, abort, redirect, request, flash
+from flask import render_template, session, abort, redirect, request, flash, Response
 from app import app, Query
 from app.utils import get_document, create_document, get_user, update_user, delete_document, get_all_docs, delete_user, update_document
 
@@ -126,3 +126,24 @@ def changeSettings():
     
     flash("Settings updated.")
     return redirect('/settings')
+
+@app.post("/encryptionKey")
+def downloadEncKey():
+    if 'user' not in session:
+        return redirect('/login')
+    
+    settings = get_document("data", 'settings', session['user'])
+    user = get_user(session['user'])
+
+    key = base64.urlsafe_b64encode(user['password'].encode("utf-8").ljust(32)[:32])
+    f = Fernet(key)
+    encKey = f.decrypt(settings['encryptionKey'].encode("utf-8")).decode("utf-8")
+    
+    filename = "abyss_recovery.txt"
+    
+    response = Response(
+        encKey,
+        mimetype='text/plain',
+        headers={"Content-Disposition": f"attachment;filename={filename}"}
+    )
+    return response

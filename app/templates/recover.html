@@ -9,7 +9,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-    <title>Login | abyss</title>
+    <title>Recover Password | abyss</title>
   </head>
   <body>
     <script>
@@ -42,11 +42,11 @@
     {% endwith %}
 
     <main class="hero">
-      <h1>Login</h1>
-      <p>Don't have an account? One will be made for you when you login.</p>
+      <h1>Recover Account</h1>
+      <p>Reset your password using an account recovery key.</p>
       <br>
 
-      <form method="post" action="/login" style="width: 40%">
+      <form method="post" action="/recover" style="width: 40%">
 
         <div class="field">
             <label>Email</label>
@@ -55,16 +55,19 @@
       <br>
 
         <div class="field">
-            <label>Password</label>
+            <label>New Password</label>
             <input name="password" type="password" placeholder="Enter password here..." />
         </div>
       <br>
 
-      <button type="submit">Login</button>
-      </form>
+      <div class="field">
+        <label>Encryption Key</label>
+        <input name="key" type="password" placeholder="Enter recovery key here..." />
+    </div>
+    <br>
 
-      <br>
-      <a href="/recover">Recover Password</a>
+      <button type="submit">Recover</button>
+      </form>
 
     </main>
   </body>

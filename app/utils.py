@@ -194,8 +194,7 @@ def update_document(database, collection, document_id, data):
 def update_user(uid, email, name, password, updatePwd=True):
     if os.environ['DATABASE'] == "appwrite":
         if updatePwd: users.update_password(uid, password)
-        users.update_name(uid, name)
-        return users.update_email(uid, email)
+        return users.update_name(uid, name)
     elif os.environ['DATABASE'] == "sqlite":
         if updatePwd: password = ph.hash(password)
         conn = sqlite3.connect("data.db")

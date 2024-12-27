@@ -126,6 +126,13 @@
 
       <br><br>
 
+      <form id="downKey" action="/encryptionKey" class="nostyles" method="post" style="width: 35%">
+        <p style="text-align: left;">Your encryption key can be used to recover your account in case you forget your password.</p>
+        <button type="submit">Download Encryption Key</button>
+      </form>
+
+      <br><br>
+
       <form id="delAccForm" action="/settings/deleteAccount" class="nostyles" method="post" style="width: 35%">
         <button type="button" class="danger" onclick="if (confirm('Are you sure? This action is destructive and irreversible. All posts will be deleted.')) document.querySelector('#delAccForm').submit()">Delete Account</button>
       </form>
