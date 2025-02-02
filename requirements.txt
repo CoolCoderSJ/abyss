@@ -4,3 +4,4 @@ flask
 python-dotenv
 argon2-cffi
 flask-session
+cryptography
